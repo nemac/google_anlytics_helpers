@@ -12,6 +12,7 @@ downloads
 
 #ignore client seceret  files
 client_secrets.json
+analytics.dat
 
 # Runtime data
 pids
