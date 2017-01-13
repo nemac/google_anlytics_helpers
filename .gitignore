@@ -10,9 +10,10 @@ downloads
 *.tar
 *.tar.gz
 
-#ignore client seceret  files
+#ignore  files
 client_secrets.json
 analytics.dat
+cohort.txt
 
 # Runtime data
 pids
