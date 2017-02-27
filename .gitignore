@@ -13,7 +13,7 @@ downloads
 #ignore  files
 client_secrets.json
 analytics.dat
-cohort.txt
+*.txt
 
 # Runtime data
 pids
