@@ -74,6 +74,14 @@ argparser.add_argument('table_id', type=str,
                      help=('The table ID of the profile you wish to access. '
                            'Format is ga:xxx where xxx is your profile ID.'))
 
+argparser.add_argument('filter_file', type=str,
+                     help=('a trext file containing the filter for ga. '
+                     'Format is path/filename .'))
+
+argparser.add_argument('output_textfile', type=str,
+                     help=('The out put text file your wish to write. '
+                     'Format is path/filename .'))
+
 def last_day_of_month(any_day):
     next_month = any_day.replace(day=28) + timedelta(days=4)
     return next_month - timedelta(days=next_month.day)
@@ -100,7 +108,7 @@ def main(argv):
     cohort_start_date = start_date.replace(day=1)  #cohort start date
     cohort_end_date = last_day_of_month(start_date) #cohort end date
 
-    file = open("cohort_extended.txt", "w")
+    file = open(flags.output_textfile, "w")
     count = 1
 
     while( this_month_start > cohort_end_date + timedelta(days=1)):
@@ -118,7 +126,7 @@ def main(argv):
         next_month_first_day_str = datetime.strftime(next_month_first_day, date_format)
         next_month_last_day_str = datetime.strftime(next_month_last_day, date_format)
 
-        results = get_cohorts(next_month_first_day_str, next_month_last_day_str, cohort, service, flags.table_id).execute()
+        results = get_cohorts(next_month_first_day_str, next_month_last_day_str, cohort, service, flags.table_id, flags.filter_file).execute()
 
         # get totals for cohort
         totals_values = get_totals_values_all_results(results)
@@ -140,7 +148,7 @@ def main(argv):
             cohort_end_date_str = datetime.strftime(cohort_end_date, date_format)
 
             # print(next_month_first_day_str, next_month_last_day_str, cohort)
-            results = get_cohorts(next_month_first_day_str, next_month_last_day_str, cohort, service, flags.table_id).execute()
+            results = get_cohorts(next_month_first_day_str, next_month_last_day_str, cohort, service, flags.table_id, flags.filter_file).execute()
             # print_rows(results, totals_values, cohort)
             rows = get_rows(results, totals_values, cohort)
             for row in rows:
@@ -167,7 +175,7 @@ def main(argv):
            'the application to re-authorize')
 
 
-def get_cohorts(start_date, end_date, cohort, service, table_id):
+def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
   """Returns a query object to retrieve data from the Core Reporting API.
 
   Args:
@@ -175,16 +183,30 @@ def get_cohorts(start_date, end_date, cohort, service, table_id):
     table_id: str The table ID form which to retrieve data.
   """
 
-  return service.data().ga().get(
-      ids=table_id,
-      start_date=start_date,
-      end_date=end_date,
-      metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
-      dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation',
-      segment='users::condition::dateOfSession<>'+ cohort + ';ga:userType==New Visitor',
-      start_index='1',
-      max_results='10000')
+  file = open(filter_file,"r")
+  filter = file.readline().replace('\n', '')
 
+  if(filter):
+      return service.data().ga().get(
+          ids=table_id,
+          start_date=start_date,
+          end_date=end_date,
+          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
+          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation',
+          segment='users::condition::dateOfSession<>'+ cohort + ';ga:userType==New Visitor',
+          filters=filter,
+          start_index='1',
+          max_results='10000')
+  else:
+      return service.data().ga().get(
+          ids=table_id,
+          start_date=start_date,
+          end_date=end_date,
+          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
+          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation',
+          segment='users::condition::dateOfSession<>'+ cohort + ';ga:userType==New Visitor',
+          start_index='1',
+          max_results='10000')
 
 def get_api_query(service, table_id):
   """Returns a query object to retrieve data from the Core Reporting API.
