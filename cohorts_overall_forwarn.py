@@ -104,64 +104,46 @@ def main(argv):
     date_format = "%Y-%m-%d"
     today = datetime.today()
     this_month_start = today.replace(day=1)
+    end_date = last_day_of_month(today) #end date
 
-    cohort_start_date = start_date.replace(day=1)  #cohort start date
-    cohort_end_date = last_day_of_month(start_date) #cohort end date
+    #count so we can do things insert column headers
+    cohort_start_date_str = datetime.strftime(start_date, date_format)
+    cohort_end_date_str = datetime.strftime(end_date, date_format)
+    cohort = cohort_start_date_str + '_' + cohort_end_date_str
 
-    file = open(flags.output_textfile, "w")
+    print('range')
+    print(start_date, end_date)
+    print(cohort)
+
+    next_month_first_day = start_date.replace(day=1)  #next months first day
+    next_month_last_day = last_day_of_month(next_month_first_day) #next months last day
+
     count = 1
+    file = open(flags.output_textfile, "w")
 
-    while( this_month_start > cohort_end_date + timedelta(days=1)):
-        #count so we can do things insert column headers
+    start_date_str = datetime.strftime(next_month_first_day, date_format)
+    end_date_str = datetime.strftime(next_month_last_day, date_format)
 
-        cohort_start_date_str = datetime.strftime(cohort_start_date, date_format)
-        cohort_end_date_str = datetime.strftime(cohort_end_date, date_format)
-        cohort = cohort_start_date_str + '_' + cohort_end_date_str
-        print('')
-        print(cohort)
+    print('str')
+    print(start_date_str, end_date_str)
 
-        next_month_first_day = cohort_end_date.replace(day=1)  #next months first day
-        next_month_last_day = last_day_of_month(next_month_first_day) #next months last day
+    results = get_cohorts(cohort_start_date_str, cohort_end_date_str, cohort, service, flags.table_id, flags.filter_file).execute()
 
-        next_month_first_day_str = datetime.strftime(next_month_first_day, date_format)
-        next_month_last_day_str = datetime.strftime(next_month_last_day, date_format)
+    column_headers = get_column_headers(results)
+    column_meteric_headers = get_totals_names_all_results(results)
+    column_headers_str = ('cohort' + '\t' + '\t'.join(column_headers))
+    column_meteric_headers_str = ('\t'.join(column_meteric_headers))
+    file.write(column_headers_str + '\t' + column_meteric_headers_str + '\n')
 
-        results = get_cohorts(next_month_first_day_str, next_month_last_day_str, cohort, service, flags.table_id, flags.filter_file).execute()
+    # get totals for cohort
+    totals_values = get_totals_values_all_results(results)
 
-        # get totals for cohort
-        totals_values = get_totals_values_all_results(results)
+    # print_rows(results, totals_values, cohort)
+    rows = get_rows(results, totals_values, cohort)
+    for row in rows:
+        rows_str = ('\t'.join(row) + '\n')
+        file.write(rows_str)
 
-        if(count == 1):
-            column_headers = get_column_headers(results)
-            column_meteric_headers = get_totals_names_all_results(results)
-            column_headers_str = ('cohort' + '\t' + '\t'.join(column_headers))
-            column_meteric_headers_str = ('\t'.join(column_meteric_headers))
-            file.write(column_headers_str + '\t' + column_meteric_headers_str + '\n')
-
-        # print(column_headers_str + '\t' + column_meteric_headers_str)
-
-        while(this_month_start > next_month_last_day + timedelta(days=1)):
-            next_month_first_day_str = datetime.strftime(next_month_first_day, date_format)
-            next_month_last_day_str = datetime.strftime(next_month_last_day, date_format)
-
-            cohort_start_date_str = datetime.strftime(cohort_start_date, date_format)
-            cohort_end_date_str = datetime.strftime(cohort_end_date, date_format)
-
-            # print(next_month_first_day_str, next_month_last_day_str, cohort)
-            results = get_cohorts(next_month_first_day_str, next_month_last_day_str, cohort, service, flags.table_id, flags.filter_file).execute()
-            # print_rows(results, totals_values, cohort)
-            rows = get_rows(results, totals_values, cohort)
-            for row in rows:
-                rows_str = ('\t'.join(row) + '\n')
-                file.write(rows_str)
-
-            next_month_first_day = next_month_last_day + timedelta(days=1)
-            next_month_last_day = last_day_of_month(next_month_first_day)
-
-
-        cohort_start_date = cohort_end_date + timedelta(days=1)  #cohort start date
-        cohort_end_date = last_day_of_month(cohort_start_date) #cohort end date
-        count += 1
     file.close()
 
   except HttpError as error:
@@ -185,15 +167,14 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
 
   file = open(filter_file,"r")
   filter = file.readline().replace('\n', '')
-
+  print (filter)
   if(filter):
       return service.data().ga().get(
           ids=table_id,
           start_date=start_date,
           end_date=end_date,
-          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
-          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath',
-          segment='users::condition::dateOfSession<>'+ cohort + ';ga:userType==New Visitor',
+          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration, ga:newUsers',
+          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:pagePath, ga:source, ga:ga:pagePath',
           filters=filter,
           start_index='1',
           max_results='10000')
@@ -202,9 +183,8 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
           ids=table_id,
           start_date=start_date,
           end_date=end_date,
-          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
-          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath',
-          segment='users::condition::dateOfSession<>'+ cohort + ';ga:userType==New Visitor',
+          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration, ga:newUsers',
+          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:pagePath, ga:source, ga:ga:pagePath',
           start_index='1',
           max_results='10000')
 

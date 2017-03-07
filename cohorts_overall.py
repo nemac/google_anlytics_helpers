@@ -144,138 +144,7 @@ def main(argv):
         rows_str = ('\t'.join(row) + '\n')
         file.write(rows_str)
 
-    # while( next_month_first_day < end_date + timedelta(days=1)):
-    #     print('next' + str(count))
-    #     print(next_month_first_day, next_month_last_day)
-    #
-    #     next_month_first_day = next_month_last_day + timedelta(days=1)  #next months first day
-    #     next_month_last_day = last_day_of_month(next_month_first_day) #next months last day
-    #
-    #     next_month_first_day_str = datetime.strftime(next_month_first_day, date_format)
-    #     next_month_last_day_str = datetime.strftime(next_month_last_day, date_format)
-    #
-    #     results = get_cohorts(next_month_first_day_str, next_month_last_day_str, cohort, service, flags.table_id, flags.filter_file).execute()
-    #
-    #     # get totals for cohort
-    #     totals_values = get_totals_values_all_results(results)
-    #
-    #     # print_rows(results, totals_values, cohort)
-    #     rows = get_rows(results, totals_values, cohort)
-    #     for row in rows:
-    #         rows_str = ('\t'.join(row) + '\n')
-    #         file.write(rows_str)
-    #
-    #     count += 1
-
     file.close()
-
-    # cohort_start_date = start_date.replace(day=1)  #cohort start date
-    # cohort_end_date = last_day_of_month(today) #cohort end date
-
-
-    # file = open(flags.output_textfile, "w")
-    # count = 1
-
-    # #count so we can do things insert column headers
-    # cohort_start_date_str = datetime.strftime(start_date, date_format)
-    # cohort_end_date_str = datetime.strftime(cohort_end_date, date_format)
-    # cohort = cohort_start_date_str + '_' + cohort_end_date_str
-    #
-    # print('range')
-    # print(start_date, cohort_end_date_str)
-    #
-    # next_month_first_day = start_date.replace(day=1)  #next months first day
-    # next_month_last_day = last_day_of_month(next_month_first_day) #next months last day
-    #
-    # print('')
-    # print('start and end date next month')
-    # print(next_month_first_day, next_month_last_day)
-    #
-    # cohort_start_date = next_month_last_day + timedelta(days=1)  #cohort start date
-    # cohort_end_date = last_day_of_month(cohort_start_date) #cohort end date
-    #
-    # print('')
-    # print('start and end date next month')
-    # print(cohort_start_date, cohort_end_date)
-
-    # while( this_month_start > cohort_end_date + timedelta(days=1)):
-    #
-    #     next_month_first_day = cohort_end_date.replace(day=1)  #next months first day
-    #     next_month_last_day = last_day_of_month(next_month_first_day) #next months last day
-    #
-    #     next_month_first_day_str = datetime.strftime(next_month_first_day, date_format)
-    #     next_month_last_day_str = datetime.strftime(next_month_last_day, date_format)
-    #
-    #     print('')
-    #     print('in while start and end date')
-    #     print(next_month_first_day_str, next_month_last_day_str)
-
-
-    # #while( this_month_start > cohort_end_date + timedelta(days=1)):
-    # #
-    # #
-    # #cohort
-    # #count so we can do things insert column headers
-    # cohort_start_date_str = datetime.strftime(cohort_start_date, date_format)
-    # cohort_end_date_str = datetime.strftime(cohort_end_date, date_format)
-    # cohort = cohort_start_date_str + '_' + cohort_end_date_str
-    # print('')
-    # print(cohort)
-    #
-    # next_month_first_day = cohort_end_date.replace(day=1)  #next months first day
-    # next_month_last_day = last_day_of_month(next_month_first_day) #next months last day
-    #
-    # next_month_first_day_str = datetime.strftime(next_month_first_day, date_format)
-    # next_month_last_day_str = datetime.strftime(next_month_last_day, date_format)
-    #
-    # results = get_cohorts(next_month_first_day_str, next_month_last_day_str, cohort, service, flags.table_id, flags.filter_file).execute()
-    #
-    # print('start and end date')
-    # print(next_month_first_day_str, next_month_last_day_str)
-    #
-    # # get totals for cohort
-    # totals_values = get_totals_values_all_results(results)
-    #
-    # if(count == 1):
-    #     column_headers = get_column_headers(results)
-    #     column_meteric_headers = get_totals_names_all_results(results)
-    #     column_headers_str = ('cohort' + '\t' + '\t'.join(column_headers))
-    #     column_meteric_headers_str = ('\t'.join(column_meteric_headers))
-    #     file.write(column_headers_str + '\t' + column_meteric_headers_str + '\n')
-    #
-    # # print(column_headers_str + '\t' + column_meteric_headers_str)
-    #
-    # while(this_month_start > next_month_last_day + timedelta(days=1)):
-    #
-    #     next_month_first_day_str = datetime.strftime(next_month_first_day, date_format)
-    #     next_month_last_day_str = datetime.strftime(next_month_last_day, date_format)
-    #
-    #     cohort_start_date_str = datetime.strftime(cohort_start_date, date_format)
-    #     cohort_end_date_str = datetime.strftime(cohort_end_date, date_format)
-    #
-    #     print('start and end date')
-    #     print(this_month_snext_month_first_day_strtart, next_month_last_day_str)
-    #
-    #     # print(next_month_first_day_str, next_month_last_day_str, cohort)
-    #     results = get_cohorts(next_month_first_day_str, next_month_last_day_str, cohort, service, flags.table_id, flags.filter_file).execute()
-    #     # print_rows(results, totals_values, cohort)
-    #     rows = get_rows(results, totals_values, cohort)
-    #     for row in rows:
-    #         rows_str = ('\t'.join(row) + '\n')
-    #         file.write(rows_str)
-    #
-    #     next_month_first_day = next_month_last_day + timedelta(days=1)
-    #     next_month_last_day = last_day_of_month(next_month_first_day)
-    #
-    #
-    # cohort_start_date = cohort_end_date + timedelta(days=1)  #cohort start date
-    # cohort_end_date = last_day_of_month(cohort_start_date) #cohort end date
-    # count += 1
-    #cohort
-    #
-    #
-
-    # file.close()
 
   except HttpError as error:
     # Handle API errors.
@@ -304,9 +173,8 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
           ids=table_id,
           start_date=start_date,
           end_date=end_date,
-          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
-          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation',
-        #   segment='ga:userType==New Visitor',
+          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration, ga:newUsers',
+          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath, ga:source, ga:adDestinationUrl',
           filters=filter,
           start_index='1',
           max_results='10000')
@@ -315,9 +183,8 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
           ids=table_id,
           start_date=start_date,
           end_date=end_date,
-          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
-          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation',
-        #   segment='ga:userType==New Visitor',
+          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration, ga:newUsers',
+          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath, ga:source, ga:adDestinationUrl',
           start_index='1',
           max_results='10000')
 
