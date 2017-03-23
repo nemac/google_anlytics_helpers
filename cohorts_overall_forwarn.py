@@ -124,8 +124,6 @@ def main(argv):
     start_date_str = datetime.strftime(next_month_first_day, date_format)
     end_date_str = datetime.strftime(next_month_last_day, date_format)
 
-    print('str')
-    print(start_date_str, end_date_str)
 
     results = get_cohorts(cohort_start_date_str, cohort_end_date_str, cohort, service, flags.table_id, flags.filter_file).execute()
 
@@ -174,7 +172,7 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
           start_date=start_date,
           end_date=end_date,
           metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration, ga:newUsers',
-          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:pagePath, ga:source, ga:ga:pagePath',
+          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:pagePath, ga:source, ga:pagePath',
           filters=filter,
           start_index='1',
           max_results='10000')
@@ -184,7 +182,7 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
           start_date=start_date,
           end_date=end_date,
           metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration, ga:newUsers',
-          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:pagePath, ga:source, ga:ga:pagePath',
+          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:pagePath, ga:source, ga:pagePath',
           start_index='1',
           max_results='10000')
 

@@ -142,7 +142,7 @@ def main(argv):
     rows = get_rows(results, totals_values, cohort)
     for row in rows:
         rows_str = ('\t'.join(row) + '\n')
-        file.write(rows_str)
+        file.write(rows_str.encode('ascii', 'ignore'))
 
     file.close()
 
