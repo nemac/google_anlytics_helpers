@@ -153,7 +153,7 @@ def main(argv):
             rows = get_rows(results, totals_values, cohort)
             for row in rows:
                 rows_str = ('\t'.join(row) + '\n')
-                file.write(rows_str)
+                file.write(rows_str.encode('ascii', 'ignore'))
 
             next_month_first_day = next_month_last_day + timedelta(days=1)
             next_month_last_day = last_day_of_month(next_month_first_day)
@@ -191,8 +191,10 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
           ids=table_id,
           start_date=start_date,
           end_date=end_date,
-          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
-          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath',
+          #   metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
+          metrics='ga:users,  ga:newUsers, ga:sessions, ga:bounceRate, ga:avgSessionDuration, ga:totalEvents ,ga:sessionsWithEvent ,ga:eventsPerSessionWithEvent,ga:uniqueEvents, ga:hits',
+          #   dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath',
+          dimensions='ga:yearMonth, ga:networkLocation , ga:networkDomain, ga:landingPagePath, ga:eventAction, ga:eventLabel, ga:eventCategory',
           segment='users::condition::dateOfSession<>'+ cohort + ';ga:userType==New Visitor',
           filters=filter,
           start_index='1',
@@ -202,8 +204,10 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
           ids=table_id,
           start_date=start_date,
           end_date=end_date,
-          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
-          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath',
+          metrics='ga:users,  ga:newUsers, ga:sessions, ga:bounceRate, ga:avgSessionDuration, ga:totalEvents ,ga:sessionsWithEvent ,ga:eventsPerSessionWithEvent,ga:uniqueEvents, ga:hits',
+          #   metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
+          #   dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath',
+          dimensions='ga:yearMonth, ga:networkLocation , ga:networkDomain, ga:landingPagePath, ga:eventAction, ga:eventLabel, ga:eventCategory',
           segment='users::condition::dateOfSession<>'+ cohort + ';ga:userType==New Visitor',
           start_index='1',
           max_results='10000')

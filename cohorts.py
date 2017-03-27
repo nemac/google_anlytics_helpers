@@ -145,7 +145,7 @@ def main(argv):
             rows = get_rows(results, totals_values, cohort)
             for row in rows:
                 rows_str = ('\t'.join(row) + '\n')
-                file.write(rows_str)
+                file.write(rows_str.encode('ascii', 'ignore'))
 
             next_month_first_day = next_month_last_day + timedelta(days=1)
             next_month_last_day = last_day_of_month(next_month_first_day)
