@@ -75,7 +75,15 @@ argparser.add_argument('table_id', type=str,
                            'Format is ga:xxx where xxx is your profile ID.'))
 
 argparser.add_argument('filter_file', type=str,
-                     help=('a trext file containing the filter for ga. '
+                     help=('a trext file containing the filter for Google Analytics. '
+                     'Format is path/filename .'))
+
+argparser.add_argument('metrics_file', type=str,
+                     help=('a trext file containing the metrics for Google Analytics. '
+                     'Format is path/filename .'))
+
+argparser.add_argument('dimensions_file', type=str,
+                     help=('a trext file containing the dimensions for Google Analytics. '
                      'Format is path/filename .'))
 
 argparser.add_argument('output_textfile', type=str,
@@ -97,7 +105,6 @@ def main(argv):
 
   # Try to make a request to the API. Print the results or handle errors.
   try:
-    # results = get_api_query(service, flags.table_id).execute()
 
     #get current date so we know when to stop
     start_date = datetime(2014, 1, 1)
@@ -127,7 +134,7 @@ def main(argv):
     print('str')
     print(start_date_str, end_date_str)
 
-    results = get_cohorts(cohort_start_date_str, cohort_end_date_str, cohort, service, flags.table_id, flags.filter_file).execute()
+    results = get_cohorts(cohort_start_date_str, cohort_end_date_str, cohort, service, flags.table_id, flags.filter_file, flags.metrics_file, flags.dimensions_file).execute()
 
     column_headers = get_column_headers(results)
     column_meteric_headers = get_totals_names_all_results(results)
@@ -157,7 +164,7 @@ def main(argv):
            'the application to re-authorize')
 
 
-def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
+def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file, metrics_file, dimensions_file):
   """Returns a query object to retrieve data from the Core Reporting API.
 
   Args:
@@ -167,14 +174,23 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
 
   file = open(filter_file,"r")
   filter = file.readline().replace('\n', '')
-  print (filter)
+
+  file = open(dimensions_file,"r")
+  dimensions = file.readline().replace('\n', '')
+
+  file = open(metrics_file,"r")
+  metrics = file.readline().replace('\n', '')
+
+
   if(filter):
       return service.data().ga().get(
           ids=table_id,
           start_date=start_date,
           end_date=end_date,
-          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration, ga:newUsers',
-          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath, ga:source, ga:adDestinationUrl',
+          metrics=metrics,
+          #'ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration, ga:newUsers',
+          dimensions=dimensions,
+          #'ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath, ga:source, ga:adDestinationUrl',
           filters=filter,
           start_index='1',
           max_results='10000')
@@ -183,29 +199,13 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
           ids=table_id,
           start_date=start_date,
           end_date=end_date,
-          metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration, ga:newUsers',
-          dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath, ga:source, ga:adDestinationUrl',
+          metrics=metrics,
+          dimensions=dimensions,
+          #metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration, ga:newUsers',
+          #dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath, ga:source, ga:adDestinationUrl',
+          filters=filter,
           start_index='1',
           max_results='10000')
-
-def get_api_query(service, table_id):
-  """Returns a query object to retrieve data from the Core Reporting API.
-
-  Args:
-    service: The service object built by the Google API Python client library.
-    table_id: str The table ID form which to retrieve data.
-  """
-
-  return service.data().ga().get(
-      ids=table_id,
-      start_date='2015-04-01',
-      end_date='2015-04-30',
-      metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
-      dimensions='ga:networkDomain, ga:yearMonth',
-      segment='users::condition::dateOfSession<>2015-04-01_2015-04-30;ga:userType==New Visitor',
-      start_index='1',
-      max_results='10000')
-
 
 def print_results(results):
   """Prints all the results in the Core Reporting API Response.
@@ -214,12 +214,6 @@ def print_results(results):
     results: The response returned from the Core Reporting API.
   """
 
-  # print_report_info(results)
-  # print_pagination_info(results)
-  # print_profile_info(results)
-  # print_query(results)
-  # print_column_headers(results)
-  # print_totals_for_all_results(results)
   print_rows(results)
 
 
@@ -441,15 +435,6 @@ def print_rows(results, totals_values, cohort):
   if results.get('rows', []):
     for row in results.get('rows'):
         print(cohort + '\t' + '\t'.join(row) + '\t' + '\t'.join(totals_values))
-        #  print()
-        # for i in range(len(row)):
-            # column = get_column_header(results, i)
-            # metric_total = get_total_for_meteric(results, column)
-            # print( column, metric_total, row[i])
-            # print(row[i] + '\t')
-    #   print('\t'.join(row))
-  # else:
-  #   print('No Rows Found')
 
 
 if __name__ == '__main__':

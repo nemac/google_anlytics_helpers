@@ -11,8 +11,10 @@ downloads
 *.tar.gz
 
 #ignore  files
+client_secrets*
 client_secrets.json
-analytics.dat
+client2.json
+*.dat
 *.txt
 
 # Runtime data

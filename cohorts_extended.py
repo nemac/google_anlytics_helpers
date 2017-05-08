@@ -238,12 +238,6 @@ def print_results(results):
     results: The response returned from the Core Reporting API.
   """
 
-  # print_report_info(results)
-  # print_pagination_info(results)
-  # print_profile_info(results)
-  # print_query(results)
-  # print_column_headers(results)
-  # print_totals_for_all_results(results)
   print_rows(results)
 
 
@@ -465,15 +459,6 @@ def print_rows(results, totals_values, cohort):
   if results.get('rows', []):
     for row in results.get('rows'):
         print(cohort + '\t' + '\t'.join(row) + '\t' + '\t'.join(totals_values))
-        #  print()
-        # for i in range(len(row)):
-            # column = get_column_header(results, i)
-            # metric_total = get_total_for_meteric(results, column)
-            # print( column, metric_total, row[i])
-            # print(row[i] + '\t')
-    #   print('\t'.join(row))
-  # else:
-  #   print('No Rows Found')
 
 
 if __name__ == '__main__':
