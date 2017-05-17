@@ -53,3 +53,5 @@ jspm_packages
 
 #configuration information
 config.yaml
+
+*.tsv
