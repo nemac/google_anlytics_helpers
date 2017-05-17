@@ -5,7 +5,7 @@ this was taken and modified from:
 https://github.com/google/google-api-python-client/blob/master/samples/analytics/core_reporting_v3_reference.py
 
 ## other references
-ay attention to setting up oAuth2 on this page the first time you run this will require some setup and requires the client_secrets.json file.
+pay attention to setting up oAuth2 on this page the first time you run this will require some setup and requires the client_secrets.json file.
  https://developers.google.com/analytics/devguides/config/mgmt/v3/quickstart/installed-py
 
 
