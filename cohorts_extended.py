@@ -100,7 +100,7 @@ def main(argv):
     # results = get_api_query(service, flags.table_id).execute()
 
     #get current date so we know when to stop
-    start_date = datetime(2016,4, 1)
+    start_date = datetime(2012, 1, 1)
     date_format = "%Y-%m-%d"
     today = datetime.today()
     this_month_start = today.replace(day=1)
