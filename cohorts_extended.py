@@ -100,7 +100,7 @@ def main(argv):
     # results = get_api_query(service, flags.table_id).execute()
 
     #get current date so we know when to stop
-    start_date = datetime(2014, 1, 1)
+    start_date = datetime(2016,4, 1)
     date_format = "%Y-%m-%d"
     today = datetime.today()
     this_month_start = today.replace(day=1)
@@ -204,10 +204,12 @@ def get_cohorts(start_date, end_date, cohort, service, table_id, filter_file):
           ids=table_id,
           start_date=start_date,
           end_date=end_date,
-          metrics='ga:users,  ga:newUsers, ga:sessions, ga:bounceRate, ga:avgSessionDuration, ga:totalEvents ,ga:sessionsWithEvent ,ga:eventsPerSessionWithEvent,ga:uniqueEvents, ga:hits',
+          metrics='ga:users,  ga:newUsers, ga:sessions, ga:bounceRate, ga:avgSessionDuration, ga:hits',
+          #ga:totalEvents ,ga:sessionsWithEvent ,ga:eventsPerSessionWithEvent,ga:uniqueEvents,
           #   metrics='ga:sessions, ga:users, ga:bounceRate, ga:avgSessionDuration',
           #   dimensions='ga:networkDomain, ga:yearMonth, ga:networkLocation, ga:landingPagePath',
-          dimensions='ga:yearMonth, ga:networkLocation , ga:networkDomain, ga:landingPagePath, ga:eventAction, ga:eventLabel, ga:eventCategory',
+          dimensions='ga:yearMonth, ga:networkLocation , ga:networkDomain, ga:landingPagePath',
+          #, ga:eventAction, ga:eventLabel, ga:eventCategory
           segment='users::condition::dateOfSession<>'+ cohort + ';ga:userType==New Visitor',
           start_index='1',
           max_results='10000')
